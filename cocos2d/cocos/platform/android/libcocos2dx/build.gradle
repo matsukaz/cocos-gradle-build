@@ -9,6 +9,12 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        ndk {
+            abiFilters = ["armeabi-v7a"]
+            if (project.hasProperty("ABI_FILTERS")) {
+                abiFilters = ABI_FILTERS.split(",").collect{it as String}
+            }
+        }
     }
 
     externalNativeBuild {

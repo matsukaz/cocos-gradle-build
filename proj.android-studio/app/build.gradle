@@ -10,6 +10,23 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        externalNativeBuild {
+            ndkBuild {
+                targets "MyGame"
+                arguments "-j" + Runtime.runtime.availableProcessors()
+                arguments "APP_STL:=gnustl_static"
+                arguments "APP_LDFLAGS:=-latomic"
+                cppFlags "-frtti", "-DCC_ENABLE_CHIPMUNK_INTEGRATION=1", "-std=c++11", "-fsigned-char"
+            }
+        }
+
+        ndk {
+            abiFilters = ["armeabi-v7a"]
+            if (project.hasProperty("ABI_FILTERS")) {
+                abiFilters = ABI_FILTERS.split(",").collect{it as String}
+            }
+        }
     }
 
     externalNativeBuild {
@@ -39,7 +56,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            externalNativeBuild {
+                ndkBuild {
+                    arguments "NDK_DEBUG=1"
+                    cppFlags "-DCOCOS2D_DEBUG=1"
+                }
+            }
+        }
         release {
+            externalNativeBuild {
+                ndkBuild {
+                    arguments "NDK_DEBUG=0"
+                    cppFlags "-DNDEBUG"
+                }
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (project.hasProperty("RELEASE_STORE_FILE")) {
