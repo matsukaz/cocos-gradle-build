@@ -11,6 +11,12 @@ android {
         versionName "1.0"
     }
 
+    externalNativeBuild {
+        ndkBuild {
+            path "../Android.mk"
+        }
+    }
+
     sourceSets.main {
         aidl.srcDir "../java/src"
         java.srcDir "../java/src"
